@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <title>Document</title>
+    <style>
+        :root{            
+            --var-amarillo: rgb(255, 206, 60);        
+            --var-rojo-oscuro: rgb(231, 62, 41);
+            --var-naranja-oscuro: rgb(238, 113, 16);
+            --var-verde-oscuro: rgb(63, 159, 74);
+            --var-verde-azulado-oscuro: rgb(39, 147, 142);
+            --var-azul-oscuro: rgb(30, 132, 208); 
+            --var-purpura-oscuro: rgb(154, 97, 199);
+            --var-rosa-oscuro: rgb(204, 83, 180);             
+            --var-gris: rgb(176, 183, 186);
+            --var-rojo-claro: rgb(255, 188, 178);            
+            --var-naranja-claro: rgb(255, 191, 132);            
+            --var-verde-claro: rgb(142, 210, 144);            
+            --var-verde-azulado-claro: rgb(122, 209, 205);            
+            --var-azul-claro: rgb(134, 200, 247);            
+            --var-purpura-claro: rgb(212, 175, 246);            
+            --var-rosa-claro: rgb(247, 170, 231);
+        }
+        * {
+            font-family: "Roboto", system-ui;
+            font-style: normal;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: radial-gradient(circle at 76% 26%, #e9f0f5 0%, #f2f0f4 57%, #f5f5f5 100%);
+        }
+
+        .options #new-file {
+            position: relative;
+            padding: 1em;
+            color: white;
+            background: linear-gradient(128.84deg, #177fda 20.46%, #3a47d1 72.3%);
+            border-radius: 0.6em;
+            cursor: pointer;
+            border: 1px solid #a3a2a2;
+            font-weight: 500;
+            outline: none;
+            transition: background 2s ease;
+            /* Transición de color de fondo */
+        }
+
+        .options #new-file:hover {
+            background: linear-gradient(128.84deg, #025caa 20.46%, #222b91 72.3%);
+        }
+
+        .main {
+            display: flex;
+            flex-direction: column;
+            border-radius: 0.2em;
+            padding: 1em;
+        }
+
+        .main .document {
+            background: rgb(255, 255, 255);
+            box-shadow: 0 0 1px 1px #bdbcbc;
+            border-radius: 0.2em;
+            display: grid;
+            grid-template-columns: 1fr;
+        }
+
+        .main .document .header .row,
+        .main .document .content .row {
+            display: grid;
+            padding: 1em;
+            grid-template-columns: 50px 100px repeat(5, 1fr);
+        }
+
+        .main .document .row article input[type="checkbox"] {
+            display: none;
+            /* Oculta el checkbox original */
+        }
+
+        .main .document .row article input[type="checkbox"]+label {
+            display: inline-block;
+            width: 20px;
+            /* Ajusta el tamaño según sea necesario */
+            height: 20px;
+            /* Ajusta el tamaño según sea necesario */
+            border-radius: 50%;
+            /* Hace que el label sea un círculo */
+            border: 2px solid #757575;
+            /* Estilo del borde */
+            cursor: pointer;
+            /* Cambia el cursor al pasar sobre el círculo */
+        }
+
+        .main .document .row article input[type="checkbox"]:checked+label {
+            background-color: #3b67e0;
+            /* Cambia el color de fondo cuando está marcado */
+        }
+
+        .main .document .header {
+            box-shadow: 0 2px 4px #cfcfcf;
+        }
+
+        .main .document .header .row {
+            font-weight: 500;
+            color: #1c1c1c;
+        }
+        .main .document .content .row{
+            cursor: pointer;
+            transition: .3s;
+        }
+        .main .document .content .row:hover{
+            background: #ebebeb;
+        }
+        .main .document .content .row {
+            color: #2b2b2b;
+            background: #fafafa;
+        }
+
+        .main .document .row article {
+            min-width: 80px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            position: relative;
+            /* Agregar esta propiedad para el separador */
+        }
+
+        .main .document .header article:hover .resizer {
+            background-color: rgba(61, 127, 228, 0.1);
+        }
+
+        .resizer {
+            width: 5px;
+            /* Ancho del separador */
+            cursor: ew-resize;
+            /* Cambiar el cursor al hacer hover */
+            background-color: transparent;
+            /* Color del separador */
+            position: absolute;
+            /* Posicionar el separador */
+            top: 0;
+            right: 0;
+            height: 100%;
+            /* Altura completa */
+        }
+
+        /*------------------    Opciones del boton    ------------------*/
+        .content-options{
+            position: absolute;
+            background: white;
+            padding: .2em;
+            display: flex;
+            flex-direction: column;
+            width: 300px;
+            gap: .2em;
+            left: 0;
+            margin-top: 2em;
+            box-shadow: 0 0 1px 2px #dddddd;
+            z-index: 1;
+            color: black;
+            border-radius: 0.4em;
+        }
+
+        .content-options .principal, .secundario {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .content-options .item {
+            display: flex;
+            transition: .2s;
+            border-radius: .8em;
+            align-items: center;
+            width: 100%;
+        }
+        
+        .content-options .item:hover{
+            background: #e7e7e7;
+        }
+
+        .content-options .item span{
+            width: 20%;
+        }
+        .content-options .item p{
+            text-align: start;
+            width: 80%;
+            color: #232323;
+            font-weight: 400;
+        }
+        /*------------------ Fin de opciones del boton -------------------------*/
+
+        /*----------------------------- Modal ---------------------------------------*/
+        .modal{
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: none;
+            transition: 1s;
+            opacity: 0;
+            justify-content: center;
+            align-items: center;
+            top: 0;
+            left: 0;
+            background: rgba(0, 0, 0, 0.4);
+        }
+       
+        .modal-content{
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            width: 500px;
+            padding: 1em;
+            background: white;
+            border-radius: .6em;
+        }
+
+        .modal-head{
+            display: flex;
+            width: 100%;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .modal-head p{
+            font-size: 1.2em;
+            font-weight: 500;
+        }
+        .modal-head span{
+            cursor: pointer;
+            font-size: 1.4em;
+        }
+        .modal-body{
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 2em;
+        }
+        .modal-body .modal-body-content {
+            display: flex;
+            width: 100%;
+            flex-direction: column;
+            gap: 10px; /* Espacio entre el label y el input */
+        }
+        .modal-body-content label{
+            font-weight: 500;
+        }
+        .modal-body-content input {
+            width: 100%; /* Ocupa todo el ancho del contenedor */
+            outline: none;
+            transition: .2s;
+            border-radius: .4em;
+            padding: 8px; /* Añade un poco de padding para mejorar la estética */
+            box-sizing: border-box; /* Asegura que el padding no aumente el tamaño total */
+        }
+        input:focus{
+            outline: 1px solid var(--var-azul-oscuro)
+        }
+        .content-colors {
+            display: flex;
+            flex-wrap: wrap; /* Permite que los elementos se envuelvan en la siguiente línea */
+        }
+
+        .content-colors label {
+            position: relative;
+            flex: 0 0 calc(12.5% - 10px); /* Cada etiqueta ocupa aproximadamente el 12.5% del ancho del contenedor */
+            margin: 5px; /* Espacio entre los elementos */
+            cursor: pointer; /* Cambia el cursor para indicar que es clickeable */
+            overflow: hidden; /* Oculta el contenido que sobresale del contenedor */
+        }
+
+        .hidden-checkbox {
+            display: none; /* Oculta el checkbox */
+        }
+
+        .circle {
+            display: block;
+            width: 40px; /* Ancho fijo para el círculo */
+            height: 40px; /* Alto fijo para el círculo */
+            border-radius: 50%; /* Hace que el div sea un círculo */
+            box-sizing: border-box; /* Incluye el borde en el tamaño total del círculo */
+        }
+
+        .hidden-checkbox:checked + .circle {
+            opacity: .9;
+            border: 4px solid rgb(24, 120, 216);
+            box-shadow: 0 0 0 4px white; /* Añade un efecto de resalte */
+        }
+        .modal-footer {
+            display: flex;
+            width: 100%;
+            margin-top: 1em;
+        }
+        .modal-footer .modal-footer-content{
+            width: 100%;
+            display: flex;
+            justify-content: end;
+        }
+
+        .modal-footer .modal-footer-content button{
+            box-shadow: 0 0 1px 1px #707070;
+            border: none;
+            color: #2f2f2f;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 0.4em;
+            padding: .8em 4em;
+        }
+
+        .modal-footer .modal-footer-content button:hover{
+            background:rgb(223, 223, 223);
+        }
+        /*----------------------------- Fin modal ---------------------------------------*/
+    </style>
+</head>
+
+<body>
+    <section class="options">
+        <button type="button" id="new-file">+ Agregar Nuevo</button>
+    </section>
+    <section class="main">
+        <section class="titulo">
+            <p>Mis archivos</p>
+        </section>
+        <section class="document">
+            <section class="header">
+                <aside class="row">
+                    <article>
+                        <input type="checkbox" id="checkbox1">
+                        <label for="checkbox1"></label>
+                    </article>
+                    <article class="icon">
+                        <span class="material-symbols-outlined">draft</span>
+                    </article>
+                    <article>Nombre<div class="resizer"></div>
+                    </article>
+                    <article>Departamento<div class="resizer"></div>
+                    </article>
+                    <article>Originador<div class="resizer"></div>
+                    </article>
+                    <article>Codigo<div class="resizer"></div>
+                    </article>
+                    <article>Revision<div class="resizer"></div>
+                    </article>
+                </aside>
+            </section>
+            <section class="content">
+            </section>
+        </section>
+    </section>
+    <section class="modal" id="modal_new_folder">
+        <section class="modal-content">
+            <section class="modal-head">
+                <p>Crear una carpeta</p>
+                <span>x</span>
+            </section>
+            <section class="modal-body">
+                <section class="modal-body-content">
+                    <label for="">Nombre</label>
+                    <input type="text" value="" placeholder="Escribe el nombre de la carpeta">
+                </section>
+                <section class="content-colors">
+                    <label>
+                        <input type="checkbox" name="color" class="hidden-checkbox" value="amarillo" id="var-amarillo">
+                        <span class="circle" style="background: var(--var-amarillo);"></span>
+                    </label>
+                    <label>
+                        <input type="checkbox" name="color" class="hidden-checkbox" value="rojo-oscuro" id="var-rojo-oscuro">
+                        <span class="circle" style="background: var(--var-rojo-oscuro);"></span>
+                    </label>
+                    <label>
+                        <input type="checkbox" name="color" class="hidden-checkbox" value="naranja-oscuro" id="var-naranja-oscuro">
+                        <span class="circle" style="background: var(--var-naranja-oscuro);"></span>
+                    </label>
+                    <label>
+                        <input type="checkbox" name="color" class="hidden-checkbox" value="verde-oscuro" id="var-verde-oscuro">
+                        <span class="circle" style="background: var(--var-verde-oscuro);"></span>
+                    </label>
+                    <label>
+                        <input type="checkbox" name="color" class="hidden-checkbox" value="verde-azulado-oscuro" id="var-verde-azulado-oscuro">
+                        <span class="circle" style="background: var(--var-verde-azulado-oscuro);"></span>
+                    </label>
+                    <label>
+                        <input type="checkbox" name="color" class="hidden-checkbox" value="azul-oscuro" id="var-azul-oscuro">
+                        <span class="circle" style="background: var(--var-azul-oscuro);"></span>
+                    </label>
+                    <label>
+                        <input type="checkbox" name="color" class="hidden-checkbox" value="purpura-oscuro" id="var-purpura-oscuro">
+                        <span class="circle" style="background: var(--var-purpura-oscuro);"></span>
+                    </label>
+                    <label>
+                        <input type="checkbox" name="color" class="hidden-checkbox" value="rosa-oscuro" id="var-rosa-oscuro">
+                        <span class="circle" style="background: var(--var-rosa-oscuro);"></span>
+                    </label>
+                    <label>
+                        <input type="checkbox" name="color" class="hidden-checkbox" value="gris" id="var-gris">
+                        <span class="circle" style="background: var(--var-gris);"></span>
+                    </label>
+                    <label>
+                        <input type="checkbox" name="color" class="hidden-checkbox" value="rojo-claro" id="var-rojo-claro">
+                        <span class="circle" style="background: var(--var-rojo-claro);"></span>
+                    </label>
+                    <label>
+                        <input type="checkbox" name="color" class="hidden-checkbox" value="naranja-claro" id="var-naranja-claro">
+                        <span class="circle" style="background: var(--var-naranja-claro);"></span>
+                    </label>
+                    <label>
+                        <input type="checkbox" name="color" class="hidden-checkbox" value="verde-claro" id="var-verde-claro">
+                        <span class="circle" style="background: var(--var-verde-claro);"></span>
+                    </label>
+                    <label>
+                        <input type="checkbox" name="color" class="hidden-checkbox" value="verde-azulado-claro" id="var-verde-azulado-claro">
+                        <span class="circle" style="background: var(--var-verde-azulado-claro);"></span>
+                    </label>
+                    <label>
+                        <input type="checkbox" name="color" class="hidden-checkbox" value="azul-claro" id="var-azul-claro">
+                        <span class="circle" style="background: var(--var-azul-claro);"></span>
+                    </label>
+                    <label>
+                        <input type="checkbox" name="color" class="hidden-checkbox" value="purpura-claro" id="var-purpura-claro">
+                        <span class="circle" style="background: var(--var-purpura-claro);"></span>
+                    </label>
+                    <label>
+                        <input type="checkbox" name="color" class="hidden-checkbox" value="rosa-claro" id="var-rosa-claro">
+                        <span class="circle" style="background: var(--var-rosa-claro);"></span>
+                    </label>
+                </section>
+            </section>
+            <section class="modal-footer">
+                <section class="modal-footer-content">
+                    <button type="button" id="btn-create-folder">Crear</button>
+                </section>
+            </section>
+        </section>
+    </section>
+    <script>
+        let data = {
+ "carpetas": [
+    {
+        "id": 2,
+        "nombre": "Carpeta1",
+        "ruta_padre_id": null,
+        "fecha_creacion": "2024-10-01T10:05:00Z",
+        "color": "var-azul-oscuro"
+    },
+    {
+        "id": 3,
+        "nombre": "Subcarpeta1",
+        "ruta_padre_id": 2,
+        "fecha_creacion": "2024-10-01T10:10:00Z",
+        "color": "var-azul-oscuro"
+    },
+    {
+        "id": 4,
+        "nombre": "SubcarpetaHija1",
+        "ruta_padre_id": 3,
+        "fecha_creacion": "2024-10-01T10:20:00Z",
+        "color": "var-azul-oscuro"
+    },
+    {
+        "id": 5,
+        "nombre": "Carpeta2",
+        "ruta_padre_id": null,
+        "fecha_creacion": "2024-10-01T10:15:00Z",
+        "color": "var-azul-oscuro"
+    },
+    {
+        "id": 6,
+        "nombre": "Subcarpeta2",
+        "ruta_padre_id": 5,
+        "fecha_creacion": "2024-10-01T10:30:00Z",
+        "color": "var-azul-oscuro"
+    },
+    {
+        "id": 7,
+        "nombre": "SubcarpetaHija2",
+        "ruta_padre_id": 6,
+        "fecha_creacion": "2024-10-01T10:35:00Z",
+        "color": "var-azul-oscuro"
+    }
+],
+ "archivos": [
+    {
+      "id": 1,
+      "nombre": "Alerta de calidad debido a que los focos de la tarjeta CIM no encendian correctamente B-CAL-100 REV 00.pdf",
+      "tipo": "pdf",
+      "originador": "Saulo Palomera",
+      "codigo": "A-CAL-102",
+      "fecha_creacion": "2024-10-01T10:12:00Z",
+      "revision": "00",
+      "carpeta_id": 2
+    },
+    {
+      "id": 2,
+      "nombre": "Archivo2.pdf",
+      "tipo": "PDF",
+      "tamano": 500,
+      "fecha_creacion": "2024-10-01T10:12:00Z",
+      "carpeta_id": 2
+    },
+    {
+      "id": 3,
+      "nombre": "Archivo4.pptx",
+      "tipo": "PPTX",
+      "tamano": 600,
+      "fecha_creacion": "2024-10-01T10:16:00Z",
+      "carpeta_id": 3
+    },
+    {
+      "id": 4,
+      "nombre": "Archivo5.xls",
+      "tipo": "XLS",
+      "tamano": 250,
+      "fecha_creacion": "2024-10-01T10:17:00Z",
+      "carpeta_id": 6
+    },
+    {
+      "id": 5,
+      "nombre": "Alerta de calidad por carcasa del conector J13 quebrado B-CAL-101 REV 00.pdf",
+      "tipo": "pdf",
+      "originador": "Saulo Palomera",
+      "codigo": "B-CAL-101",
+      "fecha_creacion": "2024-10-01T10:18:00Z",
+      "revision": "00",
+      "carpeta_id": 3
+    },
+    {
+      "id": 6,
+      "nombre": "Alerta de calidad por problema de soldadura en PCB B-CAL-103 REV 00.pdf",
+      "tipo": "pdf",
+      "originador": "Saulo Palomera",
+      "codigo": "B-CAL-103",
+      "fecha_creacion": "2024-10-01T10:19:00Z",
+      "revision": "00",
+      "carpeta_id": 4
+    },
+    {
+      "id": 7,
+      "nombre": "Alerta de calidad por etiquetado incorrecto en tres motores B-CAL-104 REV 00.pdf",
+      "tipo": "pdf",
+      "originador": "Saulo Palomera",
+      "codigo": "B-CAL-104",
+      "fecha_creacion": "2024-10-01T10:20:00Z",
+      "revision": "00",
+      "carpeta_id": 3
+    }
+]
+}   
+        const checkbox = document.querySelectorAll('.hidden-checkbox')
+        const btn_create_folder = document.querySelector('#btn-create-folder')
+        const modal_new_folder = document.querySelector('#modal_new_folder')
+        let historialCarpetas = [{ id: null, nombre: 'Mis archivos' }];
+        const resizers = document.querySelectorAll('.resizer');
+        let new_file = document.querySelector('#new-file');
+        let currentResizer;
+        let initialWidth; // Variable para almacenar el ancho inicial
+        let startX; // Variable para almacenar la posición inicial del mouse
+
+        function startResize(e) {
+            currentResizer = e.target; // Asigna el resizer actual
+
+            const headerArticle = currentResizer.parentElement;
+
+            // Guarda el ancho inicial del artículo de encabezado
+            initialWidth = headerArticle.getBoundingClientRect().width;
+
+            // Guarda la posición inicial del mouse
+            startX = e.clientX;
+
+            document.addEventListener('mousemove', resize);
+            document.addEventListener('mouseup', stopResize);
+        }
+       
+        function resize(e) {
+            const headerArticle = currentResizer.parentElement;
+            const contentArticleIndex = Array.from(headerArticle.parentElement.children).indexOf(headerArticle);
+            const headerRow = headerArticle.parentElement;
+            const contentRow = document.querySelector('.content .row');
+
+            // Calcula la diferencia de movimiento del mouse
+            const dx = e.clientX - startX;
+
+            // Calcula el nuevo ancho
+            const newWidth = initialWidth + dx;
+
+            // Obtiene el ancho mínimo permitido
+            const minWidth = 80; // Cambia este valor según tus necesidades
+
+            // Ajusta el ancho solo si es mayor que el ancho mínimo
+            if (newWidth > minWidth) {
+                headerArticle.style.width = `${newWidth}px`;
+                contentRow.children[contentArticleIndex].style.width = `${newWidth}px`; // Cambiar el ancho del contenido
+            } else {
+                // Si el nuevo ancho es menor al mínimo, asegúrate de que el resizer vuelva a su lugar
+                headerArticle.style.width = `${minWidth}px`;
+                contentRow.children[contentArticleIndex].style.width = `${minWidth}px`;
+            }
+        }
+
+        function stopResize() {
+            document.removeEventListener('mousemove', resize);
+            document.removeEventListener('mouseup', stopResize);
+        }
+
+        // Asigna el evento de mouse down para cada resizer
+        resizers.forEach(resizer => {
+            resizer.addEventListener('mousedown', startResize);
+        });
+
+       
+        new_file.addEventListener('click', e => {
+    // Verificar si ya existen las opciones
+    if (document.querySelector('.content-options')) {
+        return; // Salir si las opciones ya están abiertas
+    }
+    
+    const content_options = document.createElement('div');
+    content_options.classList.add('content-options');
+    content_options.innerHTML = `
+        <div class='principal'>
+            <div class='item' id='btn-new-folder'>
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1, 'wght' 700, 'GRAD' 0, 'opsz' 32; color: #ffbe58; filter:drop-shadow(1px 1px 0px black);">
+                    folder
+                </span>
+                <p>Carpeta</p>
+            </div>
+        </div>
+        <div class='secundario'>
+            <div class='item'>
+                <span class="material-symbols-outlined">upload_file</span>
+                <p>Carga de archivos</p>
+            </div>
+            <div class='item'>
+                <span class="material-symbols-outlined">create_new_folder</span>
+                <p>Carga de carpetas</p>
+            </div>
+        </div>
+    `;
+    new_file.appendChild(content_options);
+
+    // Función para cerrar las opciones
+    const cerrarOpciones = (event) => {
+        // Verificar si el clic fue fuera de las opciones
+        if (!content_options.contains(event.target) && event.target !== new_file) {
+            content_options.remove(); // Eliminar el contenedor de opciones
+            document.removeEventListener('click', cerrarOpciones); // Eliminar el listener
+        }
+    };
+
+    // Agregar el listener para cerrar las opciones
+    document.addEventListener('click', cerrarOpciones);
+
+    // Evento para abrir el modal al hacer clic en el botón de nueva carpeta
+    document.querySelector('#btn-new-folder').addEventListener('click', (event) => {
+        event.stopPropagation(); // Evitar que el clic en el botón cierre las opciones
+        openModal(content_options); // Pasar el contenido a openModal
+    });
+});
+
+// Función para abrir el modal
+const openModal = (content_options) => {
+    // Cerrar las opciones antes de abrir el modal
+    content_options.remove(); // Eliminar el contenedor de opciones
+    modal_new_folder.style.display = 'flex'; // Muestra el modal
+    modal_new_folder.style.opacity = '1'; // Cambia la opacidad
+};
+
+
+function closeModal() {
+    modal_new_folder.style.display = 'none'; // Oculta el modal
+    modal_new_folder.style.opacity = '0'; // Reinicia la opacidad
+}
+
+
+        function mostrarContenidoRaiz(id) {
+    const container = document.querySelector('.content');
+    const titulo = document.querySelector('.titulo p');
+
+    // Filtrando carpetas y archivos que están en la raíz
+    const carpetasRaiz = data.carpetas.filter(carpeta => carpeta.ruta_padre_id === id);
+    const archivosRaiz = data.archivos.filter(archivo => archivo.carpeta_id === id);
+
+    // Crear un arreglo combinado y priorizar las carpetas
+    const contenidoRaiz = [
+        ...carpetasRaiz.map(carpeta => ({ ...carpeta, tipo: 'carpeta' })), 
+        ...archivosRaiz.map(archivo => ({ ...archivo, tipo: 'archivo' }))
+    ];
+
+    // Limpiar el contenedor antes de agregar nuevos elementos
+    container.innerHTML = ''; 
+
+    if (id !== null) {
+        const carpetaActual = data.carpetas.find(carpeta => carpeta.id === id);
+
+        // Verificar si ya existe la carpeta en el historial, si no agregarla
+        if (!historialCarpetas.some(c => c.id === id)) {
+            historialCarpetas.push({ id: carpetaActual.id, nombre: carpetaActual.nombre });
+        }
+
+        // Actualizar el título con enlaces
+        actualizarHistorialNavegacion();
+    } else {
+        titulo.innerText = 'Mis archivos'; // Si estás en la raíz
+    }
+    
+    // Generar HTML para el contenido combinado
+    contenidoRaiz.forEach(item => {
+    const aside = document.createElement('aside');
+    aside.className = "row";
+
+    // Definir el HTML para el ícono dependiendo del tipo
+    let iconHTML;
+    if (item.tipo === 'carpeta') {
+        iconHTML = `
+            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1, 'wght' 700, 'GRAD' 0, 'opsz' 32; color: var(--${item.color}); filter:drop-shadow(1px 1px 0px black);">
+                folder
+            </span>`;
+    } else {
+        iconHTML = `
+            <span class="material-symbols-outlined">insert_drive_file</span>`;
+    }
+
+    aside.innerHTML = `
+        <article>
+            <input type="checkbox" id="checkbox${item.id}">
+            <label for="checkbox${item.id}"></label>
+        </article>
+        <article class="icon">
+            ${iconHTML}
+        </article>
+        <article>${item.nombre}</article>
+        <article>${item.tipo === 'carpeta' ? '-' : new Date(item.fecha_creacion).toISOString().split('T')[0]}</article>
+        <article>${item.tipo === 'carpeta' ? '-' : item.originador}</article>
+        <article>${item.tipo === 'carpeta' ? '-' : item.codigo}</article>
+        <article>${item.tipo === 'carpeta' ? '-' : item.revision}</article>
+    `;
+
+    // Agregar evento de clic si es una carpeta
+    if (item.tipo === 'carpeta') {
+        aside.addEventListener('click', () => {
+            carpetaActualId = item.id; // Actualiza la carpeta actual
+            console.log(carpetaActualId);
+            mostrarContenidoRaiz(carpetaActualId); // Muestra el contenido de la carpeta seleccionada
+        });
+    }
+
+        container.appendChild(aside);
+    });
+}
+
+// Función para actualizar el historial de navegación y agregar enlaces
+function actualizarHistorialNavegacion() {
+    const titulo = document.querySelector('.titulo p');
+    titulo.innerHTML = ''; // Limpiar el historial actual
+
+    historialCarpetas.forEach((carpeta, index) => {
+        const span = document.createElement('span');
+        span.innerText = carpeta.nombre;
+        span.style.cursor = 'pointer';
+
+        // Si haces clic en una carpeta del historial, navegas a esa carpeta
+        span.addEventListener('click', () => {
+            // Mantener solo el historial hasta la carpeta seleccionada
+            historialCarpetas = historialCarpetas.slice(0, index + 1);
+            mostrarContenidoRaiz(carpeta.id); // Muestra el contenido de la carpeta seleccionada
+        });
+
+        // Si no es el último elemento, agregar el separador '>'
+        titulo.appendChild(span);
+        if (index < historialCarpetas.length - 1) {
+            const separator = document.createElement('span');
+            separator.innerText = ' > ';
+            titulo.appendChild(separator);
+        }
+    });
+}
+
+function createFolder(){
+    const checkbox = document.querySelector('.hidden-checkbox:checked');
+    console.log(checkbox)
+}
+
+
+function handleCheckboxChange(changedCheckbox) {
+            checkbox.forEach(chk => {
+                if (chk !== changedCheckbox) {
+                    chk.checked = false; // Desmarcar todos los demás checkboxes
+                }
+            });
+        }
+
+    
+
+
+// Inicializar la visualización de la raíz al cargar la página
+mostrarContenidoRaiz(null);
+modal_new_folder.querySelector('.modal-head span').addEventListener('click', closeModal);
+btn_create_folder.addEventListener('click', () => createFolder())
+    // Agregar el evento change a cada checkbox
+    checkbox.forEach(chk => {
+            chk.addEventListener('change', () => {
+                if (chk.checked) {
+                    handleCheckboxChange(chk); // Llamar a la función si está marcado
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
